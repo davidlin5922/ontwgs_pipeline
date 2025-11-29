@@ -1,11 +1,5 @@
 #!/usr/bin/env nextflow
 
-// Include modules
-// include { qc } from './modules/qc.nf'
-// include { telLength } from './modules/telLength.nf'
-// include { alignment } from './modules/alignment.nf'
-// include { sv } from './modules/sv.nf'
-
 def reference_genome_link
 
 // get reference genome
@@ -304,6 +298,7 @@ workflow {
     // telLength_ch.collect()
     sv_results = plotSV_ch.collect()
     allSV_results = plotSV_all_ch
+    
     // summary
     summary(id, qc_results, mapqc_results, sv_results, allSV_results, params.reference_genome)
 
