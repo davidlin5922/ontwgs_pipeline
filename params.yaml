@@ -1,0 +1,3 @@
+sample_names: ./config/sample_names
+fastq_paths: ./config/fastq_paths
+reference_genome: T2T
