@@ -15,13 +15,19 @@ A pipeline created for long-read Oxford Nanopore Technologies (ONT) DNA whole ge
 
 This pipeline requires `Conda`/`Miniconda`, `Git`, and `Nextflow`.
 
-[`Conda`](https://docs.conda.io/projects/conda/en/stable/user-guide/install/index.html)/[`Miniconda`](https://www.anaconda.com/docs/getting-started/miniconda/install) is needed to run all the dependencies of this workflow. `Miniconda` is adequate for this pipeline.
+[`Conda`](https://docs.conda.io/projects/conda/en/stable/user-guide/install/index.html)/[`Miniconda`](https://www.anaconda.com/docs/getting-started/miniconda/install) is needed to run all the dependencies of this workflow. `Miniconda` is adequate for this pipeline. (`Conda` version 25.9.1 was used in testing, but the latest version should work.)
 
 After you have set up `Conda` environment on your device, please install `Git` and `Nextflow` in your environment.
 
-[`Git`](https://git-scm.com/install) is for version control. Stay up to date with the latest release!
+- [`Git`](https://git-scm.com/install) is for version control. Stay up to date with the latest release! (`Git` version 2.51.0 was used in testing, but the latest version should work.)
 
-[`Nextflow`](https://www.nextflow.io/docs/latest/install.html#conda) is needed to run the pipeline.
+- [`Nextflow`](https://www.nextflow.io/docs/latest/install.html#conda) is needed to run the pipeline.  (`Nextflow` version 25.10.1 was used in testing, but the latest version should work.)
+
+*Skip the documentations, just give me the command:*
+
+```
+conda install anaconda::git bioconda::nextflow
+```
 
 After installations, clone this repository:
 
@@ -58,6 +64,9 @@ Directory Structure:
     ├── config/
     │   ├── fastq_paths
     │   └── sample_names
+    ├── example/
+    │   ├── 
+    │   └── 
     ├── results/
     │   └── ...
     ├── scripts/
@@ -80,7 +89,7 @@ This pipeline has three mandatory parameters: `sample_names`, `fastq_paths`, and
 ```
 sample_names: ./config/sample_names
 fastq_paths: ./config/fastq_paths
-reference_genome: <your choice of reference>
+reference_genome: <hg19|hg38|CHM13>
 ```
 
 You need to put in unique sample names in `config/sample_names` and their corresponding fastq filepaths in `config/fastq_paths`, one per line.
@@ -95,7 +104,7 @@ After you clone the repository to your device and set your parameters, you can s
 nextflow run main.nf -params-file params.yaml
 ```
 
-It will take around 15 minutes for the first run to set up all the conda environments, but subsequent runs should be a lot quicker (\~5-10 minutes).
+It will take under 10 minutes for the first run to set up all the conda environments.
 
 #### Outputs
 
