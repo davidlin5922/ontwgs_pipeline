@@ -1,0 +1,6 @@
+/.nextflow
+/work
+/results
+/config
+params.yaml
+.nextflow.log*

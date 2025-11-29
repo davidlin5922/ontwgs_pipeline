@@ -124,7 +124,7 @@ process plotBam_qc {
 process telLength {
 
     publishDir "results/telogator2", mode: 'copy'
-    conda 'bioconda::telogator2==2.2.2 bioconda::minimap2==2.28'
+    conda 'bioconda::telogator2==2.2.2 bioconda::minimap2==2.30'
 
     input:
         tuple val(sample_id), path(fastq)
@@ -201,12 +201,12 @@ process summary {
         val(reference)
 
     output:
-        path "summary.html"
+        path "report.html"
 
     script:
     """
     Rscript -e '
-        rmarkdown::render("${projectDir}/scripts/summary.rmd",
+        rmarkdown::render("${projectDir}/scripts/report.rmd",
                           params = list(sample_name = c("${sample_id.join('", "')}"),
                                         qc = c("${qc.join('", "')}"),
                                         bamqc = c("${bamqc.join('", "')}"),
@@ -214,7 +214,7 @@ process summary {
                                         svSummary = c("${svSummary.join('", "')}"),
                                         reference = "${reference}",
                                         processDir = "${workDir}"),
-                          output_file= "summary.html",
+                          output_file= "report.html",
                           output_dir = getwd())
     '
     """
