@@ -34,7 +34,7 @@ process download_ref {
 
     script:
     """
-    wget -O ${params.reference_genome}.fa.gz "${reference_genome_link}"
+    curl ${reference_genome_link} > ${params.reference_genome}.fa.gz
     gunzip ${params.reference_genome}.fa.gz
     """
 
@@ -42,7 +42,7 @@ process download_ref {
 
 process qc {
 
-    publishDir "results/nanoplot", mode: 'copy'
+    publishDir "results/qc", mode: 'copy'
     conda 'bioconda::nanoplot==1.46.1'
 
     input:
@@ -104,14 +104,14 @@ process bam_qc {
 process plotBam_qc {
 
     cache false
-    publishDir "results/bamqc"
+    publishDir "results/bamqc", mode: 'copy'
     conda "anaconda::python=3.12 anaconda::pandas==2.3.3 anaconda::matplotlib==3.10.6"
     
     input:
         tuple val(sample_id), path(summary), path(readLength), path(mapQuality), path(depth)
 
     output:
-        path "${sample_id}"
+        path("${sample_id}")
 
     script:
     """
@@ -124,7 +124,7 @@ process plotBam_qc {
 process telLength {
 
     publishDir "results/telogator2", mode: 'copy'
-    conda 'bioconda::telogator2==2.2.2 bioconda::minimap2==2.30'
+    conda "${projectDir}/scripts/install_telogator2.yaml"
 
     input:
         tuple val(sample_id), path(fastq)
@@ -163,27 +163,78 @@ process sniffles2 {
 
 }
 
+process sniffles2_snf {
+
+    conda 'bioconda::sniffles==2.7.1'
+
+    input:
+        tuple val(sample_id), path(bam), path(bai)
+        path ref_fa
+
+    output:
+        path "${sample_id}.snf"
+    
+    script:
+    """
+    sniffles -i ${bam} --snf ${sample_id}.snf --reference ${ref_fa}
+    """
+
+}
+
 process plotSV {
 
     publishDir "results", mode: 'copy'
-    conda 'bioconda::sniffles==2.7.1 hcc::sniffles2-plot==0.2.1'
+    conda 'hcc::sniffles2-plot==0.2.1'
 
     input:
         path(vcfs)
 
     output:
         path("sniffles2")
-        path("all_samples.vcf")
 
     script:
     """
     mkdir sniffles2
-    sniffles -i ${vcfs} -v all_samples.vcf
     mv ${vcfs} ./sniffles2
     python3 -m sniffles2_plot -i ./sniffles2
-    python3 -m sniffles2_plot -i all_samples.vcf -o .
     """
     
+}
+
+process combine_snf {
+
+publishDir "results/sniffles2", mode: 'copy'
+    conda 'bioconda::sniffles==2.7.1'
+
+    input:
+        path(snfs)
+
+    output:
+        path("all_sample.vcf")
+
+    script:
+    """
+    sniffles --input ${snfs} -v all_sample.vcf
+    """
+
+}
+
+process plotSV_all {
+
+    publishDir "results/sniffles2", mode: 'copy'
+    conda 'hcc::sniffles2-plot==0.2.1'
+
+    input:
+        path(snfs)
+
+    output:
+        path("all")
+
+    script:
+    """
+    python3 -m sniffles2_plot -i all_sample.vcf -o ./all
+    """
+
 }
 
 process summary {
@@ -196,8 +247,8 @@ process summary {
         val(sample_id)
         val(qc)
         val(bamqc)
-        val(telLengths)
         val(svSummary)
+        val(allSV)
         val(reference)
 
     output:
@@ -210,8 +261,8 @@ process summary {
                           params = list(sample_name = c("${sample_id.join('", "')}"),
                                         qc = c("${qc.join('", "')}"),
                                         bamqc = c("${bamqc.join('", "')}"),
-                                        telLengths = c("${telLengths.join('", "')}"),
                                         svSummary = c("${svSummary.join('", "')}"),
+                                        allSV = "${allSV}",
                                         reference = "${reference}",
                                         processDir = "${workDir}"),
                           output_file= "report.html",
@@ -237,15 +288,23 @@ workflow {
     plotBamQC_ch = plotBam_qc(bamQC_ch)
 
     // telomere length
-    telLength_ch = telLength(samples_ch)
+    // telLength_ch = telLength(samples_ch)
 
     // sv calling
     sv_ch = sniffles2(aligned_ch, ref_ch)
-
-    // sv summary
+    sv_snf_ch = sniffles2_snf(aligned_ch, ref_ch)
+    
     plotSV_ch = plotSV(sv_ch.collect())
+    combine_snf_ch = combine_snf(sv_snf_ch.collect())
+    plotSV_all_ch = plotSV_all(combine_snf_ch)
 
+    id = sample_names_ch.collect()
+    qc_results = qc_ch.collect()
+    mapqc_results = plotBamQC_ch.collect()
+    // telLength_ch.collect()
+    sv_results = plotSV_ch.collect()
+    allSV_results = plotSV_all_ch
     // summary
-    summary(sample_names_ch.collect(), qc_ch.collect(), plotBamQC_ch.collect(), telLength_ch.collect(), plotSV_ch.collect(), params.reference_genome)
+    summary(id, qc_results, mapqc_results, sv_results, allSV_results, params.reference_genome)
 
 }

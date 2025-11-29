@@ -4,3 +4,4 @@
 /config
 params.yaml
 .nextflow.log*
+.DS_Store

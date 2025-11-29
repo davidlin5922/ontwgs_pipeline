@@ -8,6 +8,7 @@ params:
     bamqc: NA
     telLengths: NA
     svSummary: NA
+    allSV: NA
     reference: NA
     processDir: NA
 ---
@@ -19,14 +20,13 @@ dat = merge(qcs, sv_dat)
 ```
 
 ```{r, results='asis', echo=FALSE}
-saveRDS(dat, params$processDir)
+## saveRDS(dat, params$processDir)
 cat(paste0("**Number of sample: ", length(params$sample_name), "**  \n"))
 cat(paste0("**Reference aligned: ", params$reference, "**  \n"))
 # print(dat)
-qc_all = matrix(nrow=0, ncol=23)
-bamqc_all = matrix(nrow=0, ncol=39)
-tel_all = list()
-sv_all = list()
+qc_all = matrix(nrow=23, ncol=0)
+bamqc_all = matrix(nrow=39, ncol=0)
+# tel_all
 ```
 
 ```{css, echo=FALSE}
@@ -64,12 +64,12 @@ for (i in 1:nrow(dat)) {
   cat("##### Basic Statistics \n")
   nanoplot_summary = read.delim(paste0(dat_i$qc, "/NanoStats.txt"))
   colnames(nanoplot_summary) = c("Metric", "Value")
-  nanoplot_all = rbind(nanoplot_all, nanoplot_summary)
+  qc_all = cbind(qc_all, nanoplot_summary[,2])
   print(knitr::kable(nanoplot_summary))
 
   ## QC Matrics
-  cat("##### Length vs quality\n")
-  cat(sprintf("<img src='%s' width='100%%'>\n\n", paste0(dat_i$qc, "/LengthvsQualityScatterPlot_dot.png")))
+  # cat("##### Length vs quality\n")
+  # cat(sprintf("<img src='%s' width='100%%'>\n\n", paste0(dat_i$qc, "/LengthvsQualityScatterPlot_dot.png")))
   
   # cat("##### Per base sequence quality\n")
   # cat(sprintf("<img src='%s' width='100%%'>\n\n", paste0(dat_i$qc, "/LengthvsQualityScatterPlot_kde.png")))
@@ -77,8 +77,8 @@ for (i in 1:nrow(dat)) {
   cat("##### Read length distribution\n")
   cat(sprintf("<img src='%s' width='100%%'>\n\n", paste0(dat_i$qc, "/Non_weightedHistogramReadlength.png")))
   
-  # cat("##### Per base sequence quality\n")
-  # cat(sprintf("<img src='%s' width='100%%'>\n\n", paste0(dat_i$qc, "/Non_weightedLogTransformed_HistogramReadlength.png")))
+  cat("##### Read length distribution (log transformed)\n")
+  cat(sprintf("<img src='%s' width='100%%'>\n\n", paste0(dat_i$qc, "/Non_weightedLogTransformed_HistogramReadlength.png")))
   
   # cat("##### Per base sequence quality\n")
   # cat(sprintf("<img src='%s' width='100%%'>\n\n", paste0(dat_i$qc, "/WeightedHistogramReadlength.png")))
@@ -106,29 +106,29 @@ for (i in 1:nrow(dat)) {
   cat("##### Alignment summary statistics\n")
   bam_summary = read.delim(paste0(dat_i$bamqc, "/summary.tsv"), header = FALSE)[,-3]
   colnames(bam_summary) = c("Metric", "Value")
-  bamqc_all = rbind(bamqc_all, bam_summary)
+  bamqc_all = cbind(bamqc_all, bam_summary[,2])
   print(knitr::kable(bam_summary))
 
   # ==========================================================
   # Telomere Length TABSET
   # ==========================================================
-  cat("#### Telomere Estimation \n\n")
-  cat("##### Overall read length distribution\n")
-  cat(sprintf("<img src='%s' width='100%%'>\n\n", dat_i$telLength, "/readlens.png"))
+  # cat("#### Telomere Estimation \n\n")
+  # cat("##### Overall read length distribution\n")
+  # cat(sprintf("<img src='%s' width='100%%'>\n\n", dat_i$telLength, "/readlens.png"))
 
-  cat("##### Telomeric variant repeat distribution\n")
-  cat(sprintf("<img src='%s' width='100%%'>\n\n", dat_i$telLength, "/all_final_alleles.png"))
+  # cat("##### Telomeric variant repeat distribution\n")
+  # cat(sprintf("<img src='%s' width='100%%'>\n\n", dat_i$telLength, "/all_final_alleles.png"))
 
-  cat("##### Allele-specific telomere length\n")
-  cat(sprintf("<img src='%s' width='100%%'>\n\n", dat_i$telLength, "/violin_atl.png"))
+  # cat("##### Allele-specific telomere length\n")
+  # cat(sprintf("<img src='%s' width='100%%'>\n\n", dat_i$telLength, "/violin_atl.png"))
   
   # ==========================================================
   # Structural Variation TABSET
   # ==========================================================
   cat("#### Structural Variation \n\n")
   
-  cat("##### Structural variant count\n")
-  cat(sprintf("<img src='%s' width='100%%'>\n\n", paste0(dat_i$sv_summary, "/variant_count.jpg")))
+  # cat("##### Structural variant count\n")
+  # cat(sprintf("<img src='%s' width='100%%'>\n\n", paste0(dat_i$sv_summary, "/variant_count.jpg")))
   
   cat("##### Insertion/Deletion genotype frequncy\n")
   cat(sprintf("<img src='%s' width='100%%'>\n\n", paste0(dat_i$sv_summary, "/del_ins_genotype.jpg")))
@@ -148,11 +148,29 @@ for (i in 1:nrow(dat)) {
 }
 
 if (nrow(dat) > 1) {
+
   cat(sprintf("### All {.tabset}\n\n"))
-  print(qc_all)
-  print(bamqc_all)
-  print(tel_all)
-  print(sv_all)
+  cat("#### FastQC \n\n")
+  qc_all = as.data.frame(cbind(nanoplot_summary[,1], qc_all))
+  colnames(qc_all) = c("Metric", dat$sample_name)
+  print(knitr::kable(qc_all))
+  cat("#### MappingQC \n\n")
+  bamqc_all = as.data.frame(cbind(bam_summary[,1], bamqc_all))
+  colnames(bamqc_all) = c("Metric", dat$sample_name)
+  print(knitr::kable(bamqc_all))
+  cat("#### SV Compare \n\n")
+  cat("##### Heatmap\n")
+  cat(sprintf("<img src='%s' width='100%%'>\n\n", paste0(params$allSV, "/heatmap.jpg")))
+  
+  cat("##### Sample upset\n")
+  cat(sprintf("<img src='%s' width='100%%'>\n\n", paste0(params$allSV, "/sample_upset.jpg")))
+  
+  cat("##### SV site per genome\n")
+  cat(sprintf("<img src='%s' width='100%%'>\n\n", paste0(params$allSV, "/sv_site_per_genome.jpg")))
+  
+  cat("##### Variant count\n")
+  cat(sprintf("<img src='%s' width='100%%'>\n\n", paste0(params$allSV, "/variant_count.jpg")), "\n")
+
 }
 
 ```
