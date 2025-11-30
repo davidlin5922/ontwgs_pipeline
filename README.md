@@ -114,12 +114,6 @@ nextflow run main.nf -params-file params.yaml
 
 It will take about 10 minutes for the first example run to set up all the conda environments.
 
-If some files are missing in `results`, try:
-
-```
-nextflow run main.nf -params-file params.yaml -resume
-```
-
 #### Outputs
 
 The output files will be generated in `results/`:
@@ -142,6 +136,12 @@ The output files will be generated in `results/`:
 ```
 
 `bamqc`, `qc`, and `sniffles2` all contain folders, named by the `sample_names` you passed in `fastq_paths`, in which is where the tables and figures in `report.html` originated. `bams` contains all the aligned, sorted, and indexed BAM files for you. `sniffles2` also contains the individual and merged variant calling format (VCF) files.
+
+If some files are missing in `results`, try:
+
+```
+nextflow run main.nf -params-file params.yaml -resume
+```
 
 ### Pipeline Overview
 
