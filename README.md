@@ -71,6 +71,7 @@ Directory Structure:
     │   ├── fastq_paths
     │   └── sample_names
     ├── example/
+    │   ├── sample_report.html
     │   ├── SiHa-ONT_1000_1.fq
     │   └── SiHa-ONT_1000_2.fq
     ├── images/
@@ -163,7 +164,7 @@ The report includes QC plots and metrics, alignment and mapping statistics, read
 
 This pipeline was created to compare the structural variants present in cancer samples from FASTQ files to a fully visualized report. Unfortunately, ONT WGS sequencing data is always very large and takes a long time to run, let alone multiple full datasets. When a subsample is generated, it's unlikely that SVs can be detected within it. However, we can alternatively expect minimum differences in SVs between the two toy samples.
 
-A small toy dataset is included in `example/`. It contains two FASTQ files, each with 1,000 ONT reads derived from the SiHa cell line, originally isolated from fragments of a primary uterine tissue biopsy from a 55-year-old Japanese female patient with squamous cell carcinoma.<sup>4</sup> Because the dataset is intentionally tiny, it is suitable for testing whether the pipeline installs and executes correctly. An example completed report (generated using the CHM13/T2T reference genome) is provided at `results/report.html`. You may use this file as a reference to confirm that your pipeline run produced the expected output. 
+A small toy dataset is included in `example/`. It contains two FASTQ files, each with 1,000 ONT reads derived from the SiHa cell line, originally isolated from fragments of a primary uterine tissue biopsy from a 55-year-old Japanese female patient with squamous cell carcinoma.<sup>4</sup> Because the dataset is intentionally tiny, it is suitable for testing whether the pipeline installs and executes correctly. An example completed report (generated using the CHM13/T2T reference genome) is provided at `example/report.html`. You can use this file as a reference to ensure your pipeline run produced the expected output. 
 
 This pipeline is designed to compare structural variants across whole-genome cancer samples and produce a fully visualized report containing QC metrics, alignments, and SV calling results. However, full ONT WGS datasets are extremely large and normally require substantial computation time. The toy dataset is a highly reduced subsample, so SV detection sensitivity will be low, resulting in limited or absent calls in some regions. What can be reliably expected is that the two toy samples should show minimal or no differences in structural variants, and the QC and alignment steps will run fully and produce plots and summary tables.
 
