@@ -111,7 +111,7 @@ After you clone the repository to your device and set your parameters, you can s
 nextflow run main.nf -params-file params.yaml
 ```
 
-It will take about 10 minutes for the first run to set up all the conda environments.
+It will take about 10 minutes for the first example run to set up all the conda environments.
 
 #### Outputs
 
