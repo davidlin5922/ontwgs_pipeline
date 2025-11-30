@@ -92,11 +92,11 @@ This pipeline has three **mandatory** parameters: `sample_names`, `fastq_paths`,
 
 ```
 sample_names: ./config/sample_names
-FASTQ_paths: ./config/FASTQ_paths
+fastq_paths: ./config/fastq_paths
 reference_genome: <hg19|hg38|CHM13>
 ```
 
-You need to put in unique sample names (no whitespace) in `config/sample_names` and their corresponding FASTQ file paths in `config/FASTQ_paths`, one per line.
+You need to put in unique sample names (no whitespace) in `config/sample_names` and their corresponding FASTQ file paths in `config/fastq_paths`, one per line.
 
 You must also put in the reference genome you want to use in `params.yaml`. The currently available ones are `hg19`/`GRCh37`, `hg38`/`GRCh38`, `CHM13`/`T2T`/`t2t`.
 
