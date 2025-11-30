@@ -181,31 +181,37 @@ N50 is the read length such that 50% of the total assembled genome length is con
 ### FestQC: Yield
 
 ![](images/sample_yield.png)
+
 This plot shows you how much sequencing yield (total number of bases) you have if you only include reads above a given length threshold.
 
 ### MappingQC: Sequencing depth
 
 ![](images/sample_depth.png)
+
 This histogram shows the number of genomic positions covered at each sequencing depth, tells you how uniformly the reads align, whether you have appropriate coverage for variant calling, and how much of the genome is under- or over-covered.
 
 ### SV Compare: Heatmap
 
 ![](images/sample_heatmap.png)
+
 This plot shows you the deletion and insertion intersections between samples. Although our example data is minimal, it appears there is a single common indel between the two samples!
 
 ### SV Compare: Sample upset
 
 ![](images/sample_upset.png)
+
 This plot summarizes the number of SVs unique to each sample and the number shared between them. Here, it tells us that there are 48 SVs unique to sample1, 43 to sample2, and 1 (the one we saw in the heatmap) shared between the two samples.
 
 ### SV Compare: SV site per genome
 
 ![](images/sample_genome.png)
+
 This plot compares the number of deletions (del) and insertions (ins) detected across the samples.
 
 ### SV Compare: Variant count
 
 ![](images/sample_count.png)
+
 This plot adds up all SVs detected across the samples. We can see that the number agrees with the upset plot.
 
 **These results look like what we expected. :D**
