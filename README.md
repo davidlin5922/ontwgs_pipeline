@@ -120,12 +120,12 @@ The output files will be generated in `results/`:
 ```
 └── ontwgs_pipeline/
     ├── .../
-    ├── results/
-    │   └── bamqc/
-    │   └── bams/
-    │   └── qc/
-    │   └── sniffles2/
-    │   └── report.html
+    └── results/
+        └── bamqc/
+        └── bams/
+        └── qc/
+        └── sniffles2/
+        └── report.html
 ```
 
 `bamqc`, `qc`, and `sniffles2` all contains folders named by the same_names you gave in which is where the tables and figures in `report.html` originated. `bams` contains all the aligned, sorted, and indexed BAM files for you. `sniffles2` also contains the individual and merged variant calling format (VCF) files.
