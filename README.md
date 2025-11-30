@@ -91,7 +91,7 @@ Directory Structure:
 
 #### Parameters
 
-This pipeline has three mandatory parameters: `sample_names`, `FASTQ_paths`, and `reference_genome`. They are set in `params.yaml` by default:
+This pipeline has three mandatory parameters: `sample_names`, `fastq_paths`, and `reference_genome`. They are set in `params.yaml` by default:
 
 ```
 sample_names: ./config/sample_names
