@@ -1,3 +1,5 @@
+#!/usr/bin/env rmd
+
 ---
 title: "Whole Genome Long-read Sequencing Report"
 output:

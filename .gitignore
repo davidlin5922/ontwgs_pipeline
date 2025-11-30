@@ -5,3 +5,4 @@
 params.yaml
 .nextflow.log*
 .DS_Store
+params.yaml
