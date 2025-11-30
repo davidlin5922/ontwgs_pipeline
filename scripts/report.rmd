@@ -68,8 +68,8 @@ for (i in 1:nrow(dat)) {
   print(knitr::kable(nanoplot_summary))
 
   ## QC Matrics
-  # cat("##### Length vs quality\n")
-  # cat(sprintf("<img src='%s' width='100%%'>\n\n", paste0(dat_i$qc, "/LengthvsQualityScatterPlot_dot.png")))
+  cat("##### Length vs quality\n")
+  cat(sprintf("<img src='%s' width='100%%'>\n\n", paste0(dat_i$qc, "/LengthvsQualityScatterPlot_dot.png")))
   
   # cat("##### Per base sequence quality\n")
   # cat(sprintf("<img src='%s' width='100%%'>\n\n", paste0(dat_i$qc, "/LengthvsQualityScatterPlot_kde.png")))
