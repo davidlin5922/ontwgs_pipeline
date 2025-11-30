@@ -74,8 +74,6 @@ Directory Structure:
     │   ├── sample_report.html
     │   ├── SiHa-ONT_1000_1.fq
     │   └── SiHa-ONT_1000_2.fq
-    ├── images/
-    │   └── workflow.png
     ├── results/
     │   └── ...
     ├── scripts/
@@ -83,11 +81,9 @@ Directory Structure:
     │   └── report.rmd
     ├── work/
     │   └── .../
-    ├── .gitignore
     ├── main.nf
     ├── nextflow.config
-    ├── params.yaml
-    └── README.md
+    └── params.yaml
 ```
 
 #### Parameters
